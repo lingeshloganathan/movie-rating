@@ -1,0 +1,134 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum RecordStatus {
+  ACTIVE
+  INACTIVE
+  DELETED
+}
+
+enum Gender {
+  MALE
+  FEMALE
+  OTHER
+}
+
+enum MovieType {
+  MOVIE
+  SERIES
+  SHOW
+}
+
+enum GenreType {
+  ACTION
+  ADVENTURE
+  ANIMATION
+  COMEDY
+  SCIENCE_FICTION
+  HORRER
+  DRAMA
+  ROMANCE
+  THRILLER
+  DOCUMENTARY
+  CRIME
+  FANTASY
+}
+
+enum RoleType {
+  ADMIN
+  USER
+}
+
+model Role {
+  id           String       @id @default(uuid())
+  name         String       @unique
+  permissions  Permission[]
+  users        User[]
+  recordStatus RecordStatus @default(ACTIVE)
+  createdAt    DateTime     @default(now())
+  updatedAt    DateTime     @updatedAt
+}
+
+model Permission {
+  id           String       @id @default(uuid())
+  name         String       @unique
+  roles        Role[]
+  recordStatus RecordStatus @default(ACTIVE)
+  createdAt    DateTime     @default(now())
+  updatedAt    DateTime     @updatedAt
+}
+
+model User {
+  id           String       @id @default(uuid())
+  name         String
+  email        String
+  countryCode  String
+  phoneNumber  String       @unique
+  gender       Gender
+  dob          DateTime?
+  recordStatus RecordStatus @default(ACTIVE)
+  role         Role?        @relation(fields: [roleId], references: [id])
+  roleId       String?
+  // reviews Review[]
+  createdAt    DateTime     @default(now())
+  updatedAt    DateTime     @updatedAt
+}
+
+model MovieShow {
+  id           String       @id @default(uuid())
+  title        String
+  description  String
+  releaseDate  DateTime
+  type         MovieType
+  duration     Float
+  recordStatus RecordStatus @default(ACTIVE)
+  actors       Actor        @relation(fields: [actorId], references: [id])
+  actorId      String
+  genre        Genre[]
+  // reviews Review[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Actor {
+  id           String       @id @default(uuid())
+  name         String
+  gender       Gender
+  dob          DateTime
+  biography    String
+  recordStatus RecordStatus @default(ACTIVE)
+  movies       MovieShow[]
+  createdAt    DateTime     @default(now())
+  updatedAt    DateTime     @updatedAt
+}
+
+model Genre {
+  id           String       @id @default(uuid())
+  name         String
+  genreType    GenreType
+  recordStatus RecordStatus @default(ACTIVE)
+  movies       MovieShow[]
+  createdAt    DateTime     @default(now())
+  updatedAt    DateTime     @updatedAt
+}
+
+model Review {
+  id String @id @default(uuid())
+}
+
+model Rating {
+  id String @id @default(uuid())
+}
