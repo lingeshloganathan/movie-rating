@@ -81,7 +81,7 @@ model User {
   recordStatus RecordStatus @default(ACTIVE)
   role         Role?        @relation(fields: [roleId], references: [id])
   roleId       String?
-  // reviews Review[]
+  reviews      Review[]
   createdAt    DateTime     @default(now())
   updatedAt    DateTime     @updatedAt
 }
@@ -92,15 +92,15 @@ model MovieShow {
   description  String
   releaseDate  DateTime
   type         MovieType
-  duration     Float
+  duration     String
   recordStatus RecordStatus @default(ACTIVE)
   actors       Actor        @relation(fields: [actorId], references: [id])
   actorId      String
-  genre        Genre[]
-  // reviews Review[]
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  genre        Genre        @relation(fields: [genreId], references: [id])
+  genreId      String
+  reviews      Review[]
+  createdAt    DateTime     @default(now())
+  updatedAt    DateTime     @updatedAt
 }
 
 model Actor {
@@ -117,8 +117,7 @@ model Actor {
 
 model Genre {
   id           String       @id @default(uuid())
-  name         String
-  genreType    GenreType
+  genreType    GenreType[]
   recordStatus RecordStatus @default(ACTIVE)
   movies       MovieShow[]
   createdAt    DateTime     @default(now())
@@ -126,9 +125,27 @@ model Genre {
 }
 
 model Review {
-  id String @id @default(uuid())
+  id            String    @id @default(uuid())
+  User          User      @relation(fields: [userId], references: [id])
+  userId        String
+  MovieShow     MovieShow @relation(fields: [movieShowId], references: [id])
+  movieShowId   String
+  rating        Float //1 to 10
+  reviewContent String?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  @@unique([userId, movieShowId])
 }
 
-model Rating {
-  id String @id @default(uuid())
-}
+// model Rating {
+//   id          String     @id @default(uuid())
+//   User        User?      @relation(fields: [userId], references: [id])
+//   userId      String?
+//   MovieShow   MovieShow? @relation(fields: [movieShowId], references: [id])
+//   movieShowId String?
+//   rating      Float //1 to 10
+//   createdAt   DateTime   @default(now())
+//   updatedAt   DateTime   @updatedAt
+//   Review      Review[]
+// }
