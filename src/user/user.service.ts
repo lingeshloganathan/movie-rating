@@ -10,7 +10,7 @@ export class UserService {
   constructor(private readonly prisma: PrismaService) {}
 
   async createUser(input: CreateUserDto, user: User) {
-    return await this.prisma.user.create({
+    const data = await this.prisma.user.create({
       data: {
         name: input.name,
         email: input.email,
@@ -21,35 +21,32 @@ export class UserService {
       },
       select: createUserSelect,
     });
+    return data;
   }
 
   async findAllUsers() {
-    return await this.prisma.user.findMany({
+    const data = await this.prisma.user.findMany({
       where: {
         recordStatus: RecordStatus.ACTIVE,
       },
-      select: {
-        id: true,
-        name: true,
-        email: true,
-        phoneNumber: true,
-        createdAt: true,
-      },
+      select: createUserSelect,
     });
+    return data;
   }
 
   async findUserById(id: string, user: User) {
-    return await this.prisma.user.findUnique({
+    const data = await this.prisma.user.findUnique({
       where: {
         id,
         recordStatus: RecordStatus.ACTIVE,
       },
       select: createUserSelect,
     });
+    return data;
   }
 
   async updateUser(id: string, input: UpdateUserDto) {
-    return await this.prisma.user.update({
+    const data = await this.prisma.user.update({
       where: {
         id,
         recordStatus: RecordStatus.ACTIVE,
@@ -63,16 +60,15 @@ export class UserService {
       },
       select: createUserSelect,
     });
+    return data;
   }
 
   async removeUser(id: string) {
-    return await this.prisma.user.update({
+    const data = await this.prisma.user.delete({
       where: {
         id,
-        recordStatus: RecordStatus.ACTIVE,
       },
-      data: { recordStatus: RecordStatus.INACTIVE },
-      select: createUserSelect,
     });
+    return data;
   }
 }

@@ -19,41 +19,48 @@ export class UserController {
 
   @Post()
   async create(@Body() input: CreateUserDto, @CurrentUser() user: User) {
+    const data = await this.userService.createUser(input, user);
     return {
       message: 'User created successfully',
-      data: await this.userService.createUser(input, user),
+      data,
     };
   }
 
   @Get('allUsers')
   async findAll() {
+    const data = await this.userService.findAllUsers();
     return {
       message: 'Users fetched successfully',
-      data: await this.userService.findAllUsers(),
+      data,
     };
   }
 
   @Get('me/:id')
   async findOne(@Param('id') id: string, @CurrentUser() user: User) {
+    const data = await this.userService.findUserById(id, user);
     return {
       message: 'User fetched successfully',
-      data: await this.userService.findUserById(id, user),
+      data,
     };
   }
 
   @Patch('update/:id')
   async update(@Param('id') id: string, @Body() input: UpdateUserDto) {
+    const data = await this.userService.updateUser(id, input);
     return {
       message: 'User updated successfully',
-      data: await this.userService.updateUser(id, input),
+      data,
     };
   }
 
   @Delete('delete/:id')
   async remove(@Param('id') id: string) {
+    const data = await this.userService.removeUser(id);
     return {
       message: 'User deleted successfully',
-      data: await this.userService.removeUser(id),
+      data: {
+        id: data.id,
+      },
     };
   }
 }

@@ -1,4 +1,12 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+} from '@nestjs/common';
 import { ActorService } from './actor.service';
 import { CreateActorDto } from './dto/create-actor.dto';
 import { UpdateActorDto } from './dto/update-actor.dto';
@@ -8,27 +16,49 @@ export class ActorController {
   constructor(private readonly actorService: ActorService) {}
 
   @Post()
-  create(@Body() createActorDto: CreateActorDto) {
-    return this.actorService.create(createActorDto);
+  async create(@Body() input: CreateActorDto) {
+    const data = await this.actorService.createActor(input);
+    return {
+      message: 'Actor created successfully',
+      data,
+    };
   }
 
-  @Get()
-  findAll() {
-    return this.actorService.findAll();
+  @Get('allActors')
+  async findAll() {
+    const data = await this.actorService.findAllActors();
+    return {
+      message: 'Actors fetched successfully',
+      data,
+    };
   }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.actorService.findOne(+id);
+  @Get('me/:id')
+  async findOne(@Param('id') id: string) {
+    const data = await this.actorService.findActorById(id);
+    return {
+      message: 'Actor fetched successfully',
+      data,
+    };
   }
 
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateActorDto: UpdateActorDto) {
-    return this.actorService.update(+id, updateActorDto);
+  @Patch('updateActor/:id')
+  async update(@Param('id') id: string, @Body() input: UpdateActorDto) {
+    const data = await this.actorService.updateActor(id, input);
+    return {
+      message: 'Actor updated successfully',
+      data,
+    };
   }
 
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.actorService.remove(+id);
+  @Delete('deleteActor/:id')
+  async remove(@Param('id') id: string) {
+    const data = await this.actorService.removeActor(id);
+    return {
+      message: 'Actor deleted successfully',
+      data: {
+        id: data.id,
+      },
+    };
   }
 }
