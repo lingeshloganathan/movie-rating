@@ -20,6 +20,7 @@ import {
   UPDATE_MOVIE_SHOW,
   DELETE_MOVIE_SHOW,
 } from 'script/const/permission.const';
+import { MetaInputDto } from 'src/base/types/common.dto';
 @Controller('movie-show')
 export class MovieShowController {
   constructor(private readonly movieShowService: MovieShowService) {}
@@ -37,8 +38,11 @@ export class MovieShowController {
 
   @Permissions(READ_ALL_MOVIE_SHOW)
   @Get('allMovieShows')
-  async findAll(@Query() filter: FilterMovieShowDto) {
-    const data = await this.movieShowService.findAllMovieShows(filter);
+  async findAll(
+    @Query() filter: FilterMovieShowDto,
+    @Body() input: MetaInputDto,
+  ) {
+    const data = await this.movieShowService.findAllMovieShows(filter, input);
     return {
       message: 'Movie shows fetched successfully',
       data,
