@@ -9,11 +9,13 @@ import {
 } from '@nestjs/common';
 import { ReviewService } from './review.service';
 import { CreateReviewDto } from './dto/create-review.dto';
-
+import { Permissions } from 'src/base/guard/permission';
+import { CREATE_REVIEW, READ_ALL_REVIEW } from 'script/const/permission.const';
 @Controller('review')
 export class ReviewController {
   constructor(private readonly reviewService: ReviewService) {}
 
+  @Permissions(CREATE_REVIEW)
   @Post()
   async create(@Body() input: CreateReviewDto) {
     const data = await this.reviewService.createReview(input);
@@ -22,7 +24,7 @@ export class ReviewController {
       data,
     };
   }
-
+  @Permissions(READ_ALL_REVIEW)
   @Get('allReviews')
   async findAll() {
     const data = await this.reviewService.findAllReviews();

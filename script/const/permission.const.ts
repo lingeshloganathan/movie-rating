@@ -1,0 +1,25 @@
+/*ACTOR*/
+export const CREATE_ACTOR = 'CREATE_ACTOR';
+export const READ_ALL_ACTOR = 'READ_ALL_ACTOR';
+export const READ_ACTOR = 'READ_ACTOR';
+export const UPDATE_ACTOR = 'UPDATE_ACTOR';
+export const DELETE_ACTOR = 'DELETE_ACTOR';
+
+/*MOVIE-SHOW*/
+export const CREATE_MOVIE_SHOW = 'CREATE_MOVIE_SHOW';
+export const READ_ALL_MOVIE_SHOW = 'READ_ALL_MOVIE_SHOW';
+export const READ_MOVIE_SHOW = 'READ_MOVIE_SHOW';
+export const UPDATE_MOVIE_SHOW = 'UPDATE_MOVIE_SHOW';
+export const DELETE_MOVIE_SHOW = 'DELETE_MOVIE_SHOW';
+
+/*REVIEW*/
+export const CREATE_REVIEW = 'CREATE_REVIEW';
+export const READ_ALL_REVIEW = 'READ_ALL_REVIEW';
+// export const READ_REVIEW = 'READ_REVIEW';
+
+/*USER*/
+export const CREATE_USER = 'CREATE_USER';
+export const READ_ALL_USER = 'READ_ALL_USER';
+export const READ_USER = 'READ_USER';
+export const UPDATE_USER = 'UPDATE_USER';
+export const DELETE_USER = 'DELETE_USER';

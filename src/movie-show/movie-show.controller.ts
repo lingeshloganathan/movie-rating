@@ -12,11 +12,19 @@ import { MovieShowService } from './movie-show.service';
 import { CreateMovieShowDto } from './dto/create-movie-show.dto';
 import { UpdateMovieShowDto } from './dto/update-movie-show.dto';
 import { FilterMovieShowDto } from './dto/filter-movie-show.dto';
-
+import { Permissions } from 'src/base/guard/permission';
+import {
+  CREATE_MOVIE_SHOW,
+  READ_ALL_MOVIE_SHOW,
+  READ_MOVIE_SHOW,
+  UPDATE_MOVIE_SHOW,
+  DELETE_MOVIE_SHOW,
+} from 'script/const/permission.const';
 @Controller('movie-show')
 export class MovieShowController {
   constructor(private readonly movieShowService: MovieShowService) {}
 
+  @Permissions(CREATE_MOVIE_SHOW)
   @Post()
   async create(@Body() input: CreateMovieShowDto) {
     const data = await this.movieShowService.createMovieShow(input);
@@ -27,6 +35,7 @@ export class MovieShowController {
     };
   }
 
+  @Permissions(READ_ALL_MOVIE_SHOW)
   @Get('allMovieShows')
   async findAll(@Query() filter: FilterMovieShowDto) {
     const data = await this.movieShowService.findAllMovieShows(filter);
@@ -36,6 +45,7 @@ export class MovieShowController {
     };
   }
 
+  @Permissions(READ_MOVIE_SHOW)
   @Get('me/:id')
   async findOne(@Param('id') id: string) {
     const data = await this.movieShowService.findMovieShowById(id);
@@ -45,6 +55,7 @@ export class MovieShowController {
     };
   }
 
+  @Permissions(UPDATE_MOVIE_SHOW)
   @Patch('updateMovieShow/:id')
   async update(@Param('id') id: string, @Body() input: UpdateMovieShowDto) {
     const data = await this.movieShowService.updateMovieShow(id, input);
@@ -54,6 +65,7 @@ export class MovieShowController {
     };
   }
 
+  @Permissions(DELETE_MOVIE_SHOW)
   @Delete('deleteMovieShow/:id')
   async remove(@Param('id') id: string) {
     const data = await this.movieShowService.removeMovieShow(id);
