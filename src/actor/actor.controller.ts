@@ -6,6 +6,7 @@ import {
   Patch,
   Param,
   Delete,
+  Query,
 } from '@nestjs/common';
 import { ActorService } from './actor.service';
 import { CreateActorDto } from './dto/create-actor.dto';
@@ -18,6 +19,7 @@ import {
   DELETE_ACTOR,
 } from 'script/const/permission.const';
 import { Permissions } from 'src/base/guard/permission';
+import { FilterActorDto } from './dto/filter-actor.dto';
 
 @Controller('actor')
 export class ActorController {
@@ -35,8 +37,8 @@ export class ActorController {
 
   @Permissions(READ_ALL_ACTOR)
   @Get('allActors')
-  async findAll() {
-    const data = await this.actorService.findAllActors();
+  async findAll(@Body() input: FilterActorDto) {
+    const data = await this.actorService.findAllActors(input);
     return {
       message: 'Actors fetched successfully',
       data,

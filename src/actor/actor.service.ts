@@ -3,8 +3,8 @@ import { CreateActorDto } from './dto/create-actor.dto';
 import { UpdateActorDto } from './dto/update-actor.dto';
 import { PrismaService } from 'src/primsa/prisma.service';
 import { actorSelect } from 'src/primsa/query-select';
-import { RecordStatus } from '@prisma/client';
-
+import { Prisma, RecordStatus } from '@prisma/client';
+import { FilterActorDto } from './dto/filter-actor.dto';
 @Injectable()
 export class ActorService {
   constructor(private readonly prisma: PrismaService) {}
@@ -26,14 +26,22 @@ export class ActorService {
     return data;
   }
 
-  async findAllActors() {
-    const data = await this.prisma.actor.findMany({
+  async findAllActors(input: FilterActorDto) {
+    const { cursorId, perPage } = input;
+    const args: Prisma.ActorFindManyArgs = {
       where: {
         recordStatus: RecordStatus.ACTIVE,
       },
+      orderBy: {
+        createdAt: 'desc',
+      },
       select: actorSelect,
+    };
+    return await this.prisma.actor.findMany({
+      ...args,
+      cursor: cursorId ? { id: cursorId } : undefined,
+      take: perPage || 2,
     });
-    return data;
   }
 
   async findActorById(id: string) {

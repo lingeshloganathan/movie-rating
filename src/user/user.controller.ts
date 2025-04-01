@@ -20,6 +20,7 @@ import {
   READ_USER,
   UPDATE_USER,
 } from 'script/const/permission.const';
+import { UserFilterDto } from './dto/filter-user.dto';
 @Controller('user')
 export class UserController {
   constructor(private readonly userService: UserService) {}
@@ -36,8 +37,8 @@ export class UserController {
 
   @Permissions(READ_ALL_USER)
   @Get('allUsers')
-  async findAll() {
-    const data = await this.userService.findAllUsers();
+  async findAll(@Body() input: UserFilterDto) {
+    const data = await this.userService.findAllUsers(input);
     return {
       message: 'Users fetched successfully',
       data,

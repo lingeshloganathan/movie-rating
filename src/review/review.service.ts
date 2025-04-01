@@ -5,8 +5,9 @@ import {
 } from '@nestjs/common';
 import { CreateReviewDto } from './dto/create-review.dto';
 import { PrismaService } from 'src/primsa/prisma.service';
-import { RecordStatus } from '@prisma/client';
+import { Prisma, RecordStatus } from '@prisma/client';
 import { reviewSelect } from 'src/primsa/query-select';
+import { FilterReviewDto } from './dto/filter-review.dto';
 @Injectable()
 export class ReviewService {
   constructor(private readonly prisma: PrismaService) {}
@@ -36,8 +37,9 @@ export class ReviewService {
     return data;
   }
 
-  async findAllReviews() {
-    const data = await this.prisma.review.findMany({
+  async findAllReviews(input: FilterReviewDto) {
+    const { cursorId, perPage } = input;
+    const args: Prisma.ReviewFindManyArgs = {
       where: {
         User: {
           recordStatus: RecordStatus.ACTIVE,
@@ -46,9 +48,16 @@ export class ReviewService {
           recordStatus: RecordStatus.ACTIVE,
         },
       },
+      orderBy: {
+        createdAt: 'desc',
+      },
       select: reviewSelect,
+    };
+    return await this.prisma.review.findMany({
+      ...args,
+      cursor: cursorId ? { id: cursorId } : undefined,
+      take: perPage || 2,
     });
-    return data;
   }
 
   async findOneReview(id: string) {

@@ -3,7 +3,8 @@ import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { PrismaService } from 'src/primsa/prisma.service';
 import { createUserSelect } from 'src/primsa/query-select';
-import { RecordStatus, User } from '@prisma/client';
+import { Prisma, RecordStatus, User } from '@prisma/client';
+import { UserFilterDto } from './dto/filter-user.dto';
 
 @Injectable()
 export class UserService {
@@ -24,14 +25,22 @@ export class UserService {
     return data;
   }
 
-  async findAllUsers() {
-    const data = await this.prisma.user.findMany({
+  async findAllUsers(input: UserFilterDto) {
+    const { cursorId, perPage } = input;
+    const args: Prisma.UserFindManyArgs = {
       where: {
         recordStatus: RecordStatus.ACTIVE,
       },
+      orderBy: {
+        name: 'asc',
+      },
       select: createUserSelect,
+    };
+    return await this.prisma.user.findMany({
+      ...args,
+      cursor: cursorId ? { id: cursorId } : undefined,
+      take: perPage || 2,
     });
-    return data;
   }
 
   async findUserById(id: string, user: User) {
