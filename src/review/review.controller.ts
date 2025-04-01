@@ -11,6 +11,7 @@ import { ReviewService } from './review.service';
 import { CreateReviewDto } from './dto/create-review.dto';
 import { Permissions } from 'src/base/guard/permission';
 import { CREATE_REVIEW, READ_ALL_REVIEW } from 'script/const/permission.const';
+import { FilterReviewDto } from './dto/filter-review.dto';
 @Controller('review')
 export class ReviewController {
   constructor(private readonly reviewService: ReviewService) {}
@@ -26,8 +27,8 @@ export class ReviewController {
   }
   @Permissions(READ_ALL_REVIEW)
   @Get('allReviews')
-  async findAll() {
-    const data = await this.reviewService.findAllReviews();
+  async findAll(@Body() input: FilterReviewDto) {
+    const data = await this.reviewService.findAllReviews(input);
     return {
       message: 'Review fetched successfully',
       data,

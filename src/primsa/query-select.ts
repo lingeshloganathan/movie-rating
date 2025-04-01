@@ -76,4 +76,5 @@ export const reviewSelect: Prisma.ReviewSelect = {
     },
   },
   reviewContent: true,
+  rating: true,
 };
