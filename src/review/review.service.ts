@@ -12,6 +12,9 @@ export class ReviewService {
   constructor(private readonly prisma: PrismaService) {}
 
   async createReview(input: CreateReviewDto) {
+    if (input.rating < 1 || input.rating > 10) {
+      throw new BadRequestException('Rating must be between 1 and 10');
+    }
     const existingUser = await this.prisma.review.findFirst({
       where: {
         userId: input.userId,
