@@ -39,7 +39,6 @@ export class MovieShowService {
     });
     return data;
   }
-  s;
 
   async findMovieShowById(id: string) {
     const data = await this.prisma.movieShow.findUnique({
